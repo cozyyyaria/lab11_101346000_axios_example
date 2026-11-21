@@ -4,7 +4,9 @@ import axios from 'axios';
 class PersonList extends Component {
   // Define state default values
   state = {
-    persons: []
+    persons: [],
+    loading: true,
+    error: null
   };
 
   // Component Lifecycle Callback
@@ -13,11 +15,20 @@ class PersonList extends Component {
       .then(res => {
         console.log(res.data);
         const persons = res.data.results;
-        this.setState({ persons });
+        this.setState({ persons, loading: false });
+      })
+      .catch(err => {
+        this.setState({ error: err.message, loading: false });
       });
   }
+  
+
 
   render() {
+    const { loading, error } = this.state;
+    if (loading) return <p className="text-center mt-4">Loading users...</p>;
+    if (error) return <p className="text-center mt-4 text-danger">Error: {error}</p>;
+
     return (
       <ul>
         {this.state.persons.map(person => (
