@@ -1,8 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+jest.mock('axios', () => ({
+  get: () => Promise.resolve({ data: { results: [] } }),
+}));
+
+test('renders the User List heading', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByText('User List')).toBeInTheDocument();
 });
