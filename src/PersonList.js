@@ -7,7 +7,8 @@ class PersonList extends Component {
   state = {
     persons: [],
     loading: true,
-    error: null
+    error: null,
+    openId: null
   };
 
   // Component Lifecycle Callback
@@ -23,8 +24,12 @@ class PersonList extends Component {
       });
   }
 
+  toggleDetails = (id) => {
+    this.setState({ openId: this.state.openId === id ? null : id });
+  };
+
   render() {
-    const { persons, loading, error } = this.state;
+    const { persons, loading, error, openId } = this.state;
     if (loading) return <p className="text-center mt-4">Loading users...</p>;
     if (error) return <p className="text-center mt-4 text-danger">Error: {error}</p>;
 
@@ -44,7 +49,7 @@ class PersonList extends Component {
                   <Col md={2} className="text-center">
                     <Image src={person.picture.large} roundedCircle className="person-img mb-3" alt="" />
                     <div>
-                      <Button variant="primary" size="sm">Details</Button>
+                    <Button variant="primary" size="sm" onClick={() => this.toggleDetails(id)}>Details</Button>
                     </div>
                   </Col>
                   <Col md={10}>
@@ -57,6 +62,12 @@ class PersonList extends Component {
                     <Detail label="Register Date" value={person.registered.date} />
                     <Detail label="Phone#" value={person.phone} />
                     <Detail label="Cell#" value={person.cell} />
+                    {openId === id && (
+                      <>
+                        <Detail label="Nationality" value={person.nat} />
+                        <Detail label="Coordinates" value={`${person.location.coordinates.latitude}, ${person.location.coordinates.longitude}`} />
+                      </>
+                    )}
                   </Col>
                 </Row>
               </Card.Body>
